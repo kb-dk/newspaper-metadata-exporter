@@ -45,6 +45,7 @@ public class MetadataExporter extends DefaultTreeEventHandler {
     public void handleAttribute(AttributeParsingEvent event) {
         String location = event.getLocation();
         if (location != null) {
+            log.debug("Saving metadata for " + location);
             File file = new File(metadataexportdir, location);
             File md5file = new File(metadataexportdir, location + ".md5");
             file.getParentFile().mkdirs();
