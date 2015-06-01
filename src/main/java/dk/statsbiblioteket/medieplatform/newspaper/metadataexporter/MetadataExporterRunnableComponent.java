@@ -31,7 +31,7 @@ public class MetadataExporterRunnableComponent extends TreeProcessorAbstractRunn
     public void doWorkOnItem(Batch batch, ResultCollector resultCollector) throws Exception {
         log.info("Starting metadata export for '{}'", batch.getFullID());
         List<TreeEventHandler> metadataExporter = Arrays.asList(new TreeEventHandler[]
-                { new MetadataExporter(batch, properties) });
+                { new MetadataExporter(properties) });
         EventRunner eventRunner = new EventRunner(createIterator(batch), metadataExporter, resultCollector);
         eventRunner.run();
         log.info("Done exporting metadata for '{}', success: {}", batch.getFullID(), resultCollector.isSuccess());

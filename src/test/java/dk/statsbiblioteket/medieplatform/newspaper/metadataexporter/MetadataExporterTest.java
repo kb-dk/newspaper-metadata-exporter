@@ -1,10 +1,8 @@
 package dk.statsbiblioteket.medieplatform.newspaper.metadataexporter;
 
-import org.testng.FileAssert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
 
 import java.io.ByteArrayInputStream;
@@ -22,7 +20,7 @@ public class MetadataExporterTest {
     @BeforeMethod
     public void setTemporaryDirectory(Method method) {
         temporaryDirectory = new File("target", method.getName());
-        System.getProperties().setProperty("metadataexporter.outputDir", temporaryDirectory.getAbsolutePath());
+        System.getProperties().setProperty("metadataexporter.outputdir", temporaryDirectory.getAbsolutePath());
     }
 
     /**
@@ -33,7 +31,7 @@ public class MetadataExporterTest {
     @Test
     public void testFilesWritten() throws Exception {
         //Setup fixture
-        MetadataExporter metadataExporter = new MetadataExporter(new Batch("4000123456", 1), System.getProperties());
+        MetadataExporter metadataExporter = new MetadataExporter(System.getProperties());
         String location = "B4000123456-RT1/4000123456-01/1970-01-01-01/minavis-1970-01-01.mods.xml";
         AttributeParsingEvent event = new AttributeParsingEvent("MODS", location) {
             @Override

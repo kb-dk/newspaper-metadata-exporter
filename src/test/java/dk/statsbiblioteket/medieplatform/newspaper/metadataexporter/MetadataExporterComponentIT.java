@@ -66,7 +66,7 @@ public class MetadataExporterComponentIT {
         batch.setBatchID(TEST_BATCH_ID);
         batch.setRoundTripNumber(1);
         EventRunner runner = new EventRunner(iterator,
-                Arrays.asList(new TreeEventHandler[]{new MetadataExporter(batch, properties)}),
+                Arrays.asList(new TreeEventHandler[]{new MetadataExporter(properties)}),
                 new ResultCollector(getClass().getSimpleName(), "1", 10));
 
         runner.run();
