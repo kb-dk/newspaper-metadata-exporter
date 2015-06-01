@@ -43,15 +43,17 @@ public class MetadataExporter extends DefaultTreeEventHandler {
 
     @Override
     public void handleAttribute(AttributeParsingEvent event) {
-        String location = event.getLocation();
-        if (location != null) {
-            log.debug("Saving metadata for " + location);
-            File file = new File(metadataexportdir, location);
-            File md5file = new File(metadataexportdir, location + ".md5");
+        String name = event.getName();
+        if (name != null) {
+            log.debug("Saving metadata for " + name);
+            File file = new File(metadataexportdir, name);
+            File md5file = new File(metadataexportdir, name + ".md5");
             file.getParentFile().mkdirs();
             try {
                 Files.saveString(Streams.asString(event.getData()), file);
-                Files.saveString(event.getChecksum(), md5file);
+                if (event.getChecksum() != null) {
+                    Files.saveString(event.getChecksum(), md5file);
+                }
             } catch (IOException e) {
                 throw new RuntimeException("Unable to write file '" + file + "'", e);
             }
