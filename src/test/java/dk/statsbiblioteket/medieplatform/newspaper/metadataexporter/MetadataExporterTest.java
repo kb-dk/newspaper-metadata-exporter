@@ -56,4 +56,35 @@ public class MetadataExporterTest {
         assertReadable(expectedMd5File);
         assertLength(expectedMd5File, 32);
     }
+
+
+    /**
+     * Test that an attribute event with no location does not fail.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testNoLocation() throws Exception {
+        //Setup fixture
+        MetadataExporter metadataExporter = new MetadataExporter(System.getProperties());
+        String location = null;
+        AttributeParsingEvent event = new AttributeParsingEvent("MODS", location) {
+            @Override
+            public InputStream getData() throws IOException {
+                return new ByteArrayInputStream("<placeHolder/>".getBytes());
+            }
+
+            @Override
+            public String getChecksum() throws IOException {
+                return "305bb2d3b2607bcd34e7d8c6d154e7e9";
+            }
+        };
+
+        //Call method
+        metadataExporter.handleAttribute(event);
+
+        //Check result
+        //No result to check
+    }
+
 }
