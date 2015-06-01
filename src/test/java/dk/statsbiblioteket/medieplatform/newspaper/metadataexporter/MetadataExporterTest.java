@@ -32,8 +32,8 @@ public class MetadataExporterTest {
     public void testFilesWritten() throws Exception {
         //Setup fixture
         MetadataExporter metadataExporter = new MetadataExporter(System.getProperties());
-        String location = "B4000123456-RT1/4000123456-01/1970-01-01-01/minavis-1970-01-01.mods.xml";
-        AttributeParsingEvent event = new AttributeParsingEvent("MODS", location) {
+        String name = "B4000123456-RT1/4000123456-01/1970-01-01-01/minavis-1970-01-01.mods.xml";
+        AttributeParsingEvent event = new AttributeParsingEvent(name, null) {
             @Override
             public InputStream getData() throws IOException {
                 return new ByteArrayInputStream("<placeHolder/>".getBytes());
@@ -49,10 +49,10 @@ public class MetadataExporterTest {
         metadataExporter.handleAttribute(event);
 
         //Check result
-        File expectedFile = new File(temporaryDirectory, location);
+        File expectedFile = new File(temporaryDirectory, name);
         assertReadable(expectedFile);
         assertLength(expectedFile, 14);
-        File expectedMd5File = new File(temporaryDirectory, location + ".md5");
+        File expectedMd5File = new File(temporaryDirectory, name + ".md5");
         assertReadable(expectedMd5File);
         assertLength(expectedMd5File, 32);
     }
