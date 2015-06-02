@@ -53,6 +53,28 @@ public class MetadataExporterComponentIT {
         processBatch("bad-bad-batch");
     }
 
+    /**
+     * Test that a reasonable batch can be run against the flagger component without generating any
+     * errors or flags when the batch and configuration agree on the setup..
+     * @throws Exception
+     */
+    @Test(groups = "testDataTest")
+    public void testSmallBatchTransforming() throws Exception {
+        properties.setProperty("metadataexporter.transform", "true");
+        processBatch("small-test-batch");
+    }
+
+    /**
+     * Test that a the default batch with a configuration inconsistent with the metadata in the batch. This should
+     * generate a lot of flags.
+     * @throws Exception
+     */
+    @Test(groups = "testDataTest")
+    public void testBadBatchTransforming() throws Exception {
+        properties.setProperty("metadataexporter.transform", "true");
+        processBatch("bad-bad-batch");
+    }
+
     private void loadSpecificProperties(String path) throws Exception {
         log.info("Loading specific config from: " + path);
         File specificProperties = new File(path);

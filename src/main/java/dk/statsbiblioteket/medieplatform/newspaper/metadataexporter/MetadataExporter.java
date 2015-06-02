@@ -1,6 +1,5 @@
 package dk.statsbiblioteket.medieplatform.newspaper.metadataexporter;
 
-import dk.statsbiblioteket.medieplatform.autonomous.Batch;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.AttributeParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
 import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeEndParsingEvent;
@@ -23,7 +22,7 @@ public class MetadataExporter extends DefaultTreeEventHandler {
 
     public static String METADATAEXPORTER_LOCATION_PROPERTY = "metadataexporter.outputdir";
 
-    private final String metadataexportdir;
+    protected final String metadataexportdir;
 
     /**
      * @param properties Defines specifics for metadata export.

@@ -29,6 +29,8 @@ public class MetadataExporterStandaloneIT {
         properties.load(new FileInputStream(specificProperties));
         properties.setProperty(MetadataExporter.METADATAEXPORTER_LOCATION_PROPERTY,
                                "target/metadataexporter/Integration");
+        properties.setProperty("metadataexporter.transform",
+                               "true");
         new File("target/metadataexporter").mkdirs();
         properties.store(new FileOutputStream("target/metadataexporter/it.properties"), null);
     }
@@ -55,6 +57,6 @@ public class MetadataExporterStandaloneIT {
 
     private void processBatch()  throws Exception  {
         MetadataExporterStandalone.main(
-                new String[]{"-c", "target/metadataexporter/it.properties", "-b", TEST_BATCH_ID, "-n", "1"});
+                new String[]{"-c", "target/metadataexporter/it.properties", "-b", TEST_BATCH_ID, "-n", "1", "-p", "false"});
     }
 }

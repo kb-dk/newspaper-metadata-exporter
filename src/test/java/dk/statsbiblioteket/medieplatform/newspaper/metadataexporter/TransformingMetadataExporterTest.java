@@ -1,8 +1,13 @@
 package dk.statsbiblioteket.medieplatform.newspaper.metadataexporter;
 
+import org.testng.FileAssert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
+
+import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Properties;
 
 import static org.testng.AssertJUnit.*;
@@ -13,11 +18,15 @@ import static org.testng.AssertJUnit.*;
 public class TransformingMetadataExporterTest {
 
     private TransformingMetadataExporter transformingMetadataExporter;
+    private File temporaryDirectory;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setProperties(Method method) throws Exception {
+        temporaryDirectory = new File("target", method.getName());
         Properties properties = new Properties();
         properties.setProperty("metadataexporter.cutoffdate", "1875-01-01");
+        properties.setProperty("metadataexporter.presentationcopydir", "/avis-show");
+        properties.setProperty("metadataexporter.outputdir", temporaryDirectory.getAbsolutePath());
         transformingMetadataExporter = new TransformingMetadataExporter(properties);
     }
 
@@ -70,8 +79,8 @@ public class TransformingMetadataExporterTest {
 
     @Test
     public void testIncludedInExportWorkshiftTarget() throws Exception {
-        assertTrue(transformingMetadataExporter.includedInExport(
-                "B400022028241-RT1/WORKSHIFT-ISO-TARGET/Target-000001-0001.mix.xml"));
+        assertTrue(transformingMetadataExporter
+                           .includedInExport("B400022028241-RT1/WORKSHIFT-ISO-TARGET/Target-000001-0001.mix.xml"));
 
     }
 
@@ -115,5 +124,13 @@ public class TransformingMetadataExporterTest {
         assertEquals("Target/Target-000001-0001.mix.xml",
                      transformingMetadataExporter.transformName(
                              "B400022028241-RT1/WORKSHIFT-ISO-TARGET/Target-000001-0001.mix.xml"));
+    }
+
+    @Test
+    public void testNodeBegin() throws Exception {
+        String name = "B400022028241-RT1/400022028241-1/1795-06-15-01/adresseavisen1759-1795-06-15-01-0003A.jp2";
+        NodeBeginsParsingEvent event = new NodeBeginsParsingEvent(name, null);
+        transformingMetadataExporter.handleNodeBegin(event);
+        FileAssert.assertFile(new File(temporaryDirectory, "adresseavisen1759/1795-06-15/01/adresseavisen1759-1795-06-15-01-0003A.jp2"));
     }
 }

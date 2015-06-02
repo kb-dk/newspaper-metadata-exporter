@@ -1,5 +1,11 @@
 package dk.statsbiblioteket.medieplatform.newspaper.metadataexporter;
 
+import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsParsingEvent;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -7,7 +13,8 @@ import java.util.Properties;
  */
 public class TransformingMetadataExporter extends MetadataExporter {
 
-    private String cutoffDate;
+    private final String presentationcopydir;
+    private final String cutoffDate;
 
     /**
      * @param properties Defines specifics for metadata export.
@@ -15,6 +22,7 @@ public class TransformingMetadataExporter extends MetadataExporter {
     public TransformingMetadataExporter(Properties properties) {
         super(properties);
         cutoffDate = properties.getProperty("metadataexporter.cutoffdate");
+        presentationcopydir = properties.getProperty("metadataexporter.presentationcopydir");
     }
 
     protected boolean includedInExport(String name) {
@@ -39,6 +47,23 @@ public class TransformingMetadataExporter extends MetadataExporter {
         }
         result.append("/").append(filename);
         return result.toString();
+    }
+
+    @Override
+    public void handleNodeBegin(NodeBeginsParsingEvent event) {
+        super.handleNodeBegin(event);
+        String name = event.getName();
+        if (name != null && includedInExport(name) && name.endsWith(".jp2")) {
+            Path presentationFile = Paths.get(presentationcopydir, name.replaceAll("\\.jp2$", "-presentation.jp2"));
+            Path link = Paths.get(metadataexportdir, transformName(name));
+            link.getParent().toFile().mkdirs();
+            link.toFile().delete();
+            try {
+                Files.createSymbolicLink(link, presentationFile);
+            } catch (IOException e) {
+                throw new RuntimeException("Unable to create symlink for " + link);
+            }
+        }
     }
 
     private String getNewspaperId(String name) {
