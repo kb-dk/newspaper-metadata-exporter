@@ -14,24 +14,30 @@ import java.util.Properties;
 
 public class MetadataExporterRunnableComponent extends TreeProcessorAbstractRunnableComponent {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-    private Properties properties;
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final MetadataExporter metadataExporter;
+    private String eventID;
 
     protected MetadataExporterRunnableComponent(Properties properties) {
         super(properties);
-        this.properties = properties;
+        if (Boolean.parseBoolean(properties.getProperty("metadataexporter.transform", "false"))) {
+            metadataExporter = new TransformingMetadataExporter(properties);
+        } else {
+            metadataExporter = new MetadataExporter(properties);
+        }
+        eventID = properties.getProperty("metadataexporter.eventID", "Metadata_Exported");
     }
 
     @Override
     public String getEventID() {
-        return "Metadata_Exported";
+        return eventID;
     }
 
     @Override
     public void doWorkOnItem(Batch batch, ResultCollector resultCollector) throws Exception {
         log.info("Starting metadata export for '{}'", batch.getFullID());
         List<TreeEventHandler> metadataExporter = Arrays.asList(new TreeEventHandler[]
-                { new MetadataExporter(properties) });
+                {this.metadataExporter});
         EventRunner eventRunner = new EventRunner(createIterator(batch), metadataExporter, resultCollector);
         eventRunner.run();
         log.info("Done exporting metadata for '{}', success: {}", batch.getFullID(), resultCollector.isSuccess());
