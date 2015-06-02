@@ -40,6 +40,7 @@ public class MetadataExporterStandalone {
         //Get batchid and roundtrip number from command line
         String batchid = parseBatchId(args);
         Integer roundtripno = parseRoundtripNumber(args);
+        boolean preservable = parsePreservable(args);
 
         String maxResultsProperty = properties.getProperty(ConfigConstants.MAX_RESULTS_COLLECTED);
         Integer maxResults = null;
@@ -57,21 +58,30 @@ public class MetadataExporterStandalone {
 
         //make a new runnable component from the properties
         MetadataExporterRunnableComponent exporter = new MetadataExporterRunnableComponent(properties);
+        ResultCollector result = new ResultCollector(exporter.getComponentName(),
+                                                              exporter.getComponentVersion(), maxResults);
+        result.setPreservable(preservable);
         AutonomousWorker<Batch> worker = new AutonomousWorker<>(
-                exporter,
-                new ResultCollector(exporter.getComponentName(), exporter.getComponentVersion(), maxResults),
+                exporter, result,
                 new Batch(batchid, roundtripno), domsEventStorage);
 
         //Run the component
         worker.run();
 
         //Return result
-        ResultCollector result = worker.getResultCollector();
-
         log.info(result.toReport());
         if (!result.isSuccess()) {
             System.exit(1);
         }
+    }
+
+    private static boolean parsePreservable(String[] args) {
+        for (int i = 0; i < args.length - 1; i++) {
+            if (args[i].equals("-p")) {
+                return Boolean.parseBoolean(args[i+1]);
+            }
+        }
+        return false;
     }
 
     private static String parseBatchId(String[] args) {
@@ -80,6 +90,7 @@ public class MetadataExporterStandalone {
                 return args[i+1];
             }
         }
+        usage();
         throw new IllegalArgumentException("No parameter given for batch");
     }
 
@@ -89,6 +100,12 @@ public class MetadataExporterStandalone {
                 return Integer.parseInt(args[i+1]);
             }
         }
-        throw new IllegalArgumentException("No parameter given for batch");
+        usage();
+        throw new IllegalArgumentException("No parameter given for roundtrip");
+    }
+
+    private static void usage() {
+        System.err.println("Usage: java " + MetadataExporterStandalone.class.getName()
+                                   + " -b <batchid> -n <roundtripno> [-p <preserveresult>] [-c <configfile>] ");
     }
 }
