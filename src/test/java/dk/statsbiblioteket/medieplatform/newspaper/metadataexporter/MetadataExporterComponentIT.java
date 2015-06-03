@@ -30,7 +30,7 @@ public class MetadataExporterComponentIT {
         log.info("Loading general config from: " + pathToProperties);
         genericPropertyFile = new File(pathToProperties);
         properties.load(new FileInputStream(genericPropertyFile));
-        loadSpecificProperties(genericPropertyFile.getParentFile() + "/newspaper-metadataexporter-config/config.properties");
+        loadSpecificProperties(genericPropertyFile.getParentFile() + "/newspaper-metadata-exporter-config/config.properties");
     }
 
     /**

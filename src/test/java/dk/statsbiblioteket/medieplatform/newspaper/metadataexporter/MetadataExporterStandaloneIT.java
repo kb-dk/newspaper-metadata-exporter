@@ -23,7 +23,7 @@ public class MetadataExporterStandaloneIT {
         log.info("Loading general config from: " + pathToProperties);
         genericPropertyFile = new File(pathToProperties);
         properties.load(new FileInputStream(genericPropertyFile));
-        String path = genericPropertyFile.getParentFile() + "/newspaper-metadataexporter-config/config.properties";
+        String path = genericPropertyFile.getParentFile() + "/newspaper-metadata-exporter-config/config.properties";
         log.info("Loading specific config from: " + path);
         File specificProperties = new File(path);
         properties.load(new FileInputStream(specificProperties));
