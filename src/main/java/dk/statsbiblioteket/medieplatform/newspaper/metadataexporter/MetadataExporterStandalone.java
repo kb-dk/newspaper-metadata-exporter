@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import dk.statsbiblioteket.doms.central.connectors.EnhancedFedoraImpl;
+import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.medieplatform.autonomous.AutonomousComponentUtils;
 import dk.statsbiblioteket.medieplatform.autonomous.AutonomousWorker;
@@ -18,6 +19,8 @@ import dk.statsbiblioteket.medieplatform.autonomous.NewspaperDomsEventStorageFac
 import dk.statsbiblioteket.medieplatform.autonomous.ResultCollector;
 import dk.statsbiblioteket.medieplatform.autonomous.RunnableComponent;
 
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
 import java.util.Properties;
 
 public class MetadataExporterStandalone {
@@ -32,6 +35,10 @@ public class MetadataExporterStandalone {
      * @see AutonomousComponentUtils#parseArgs(String[])
      */
     public static void main(String[] args) throws Exception {
+        System.exit(doMain(args));
+    }
+
+    public static int doMain(String[] args) throws Exception {
         log.info("Starting with args {}", args);
 
         //Parse the args to a properties construct
@@ -71,8 +78,9 @@ public class MetadataExporterStandalone {
         //Return result
         log.info(result.toReport());
         if (!result.isSuccess()) {
-            System.exit(1);
+            return 1;
         }
+        return 0;
     }
 
     private static boolean parsePreservable(String[] args) {

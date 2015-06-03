@@ -56,7 +56,7 @@ public class MetadataExporterStandaloneIT {
     }
 
     private void processBatch()  throws Exception  {
-        MetadataExporterStandalone.main(
+        MetadataExporterStandalone.doMain(
                 new String[]{"-c", "target/metadataexporter/it.properties", "-b", TEST_BATCH_ID, "-n", "1", "-p", "false"});
     }
 }
