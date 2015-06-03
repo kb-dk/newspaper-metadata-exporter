@@ -8,6 +8,9 @@ import dk.statsbiblioteket.medieplatform.autonomous.iterator.common.NodeBeginsPa
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import static org.testng.AssertJUnit.*;
@@ -131,6 +134,8 @@ public class TransformingMetadataExporterTest {
         String name = "B400022028241-RT1/400022028241-1/1795-06-15-01/adresseavisen1759-1795-06-15-01-0003A.jp2";
         NodeBeginsParsingEvent event = new NodeBeginsParsingEvent(name, null);
         transformingMetadataExporter.handleNodeBegin(event);
-        FileAssert.assertFile(new File(temporaryDirectory, "adresseavisen1759/1795-06-15/01/adresseavisen1759-1795-06-15-01-0003A.jp2"));
+        assertTrue(Files.exists(Paths.get(temporaryDirectory.getPath(),
+                               "adresseavisen1759/1795-06-15/01/adresseavisen1759-1795-06-15-01-0003A.jp2"),
+                     LinkOption.NOFOLLOW_LINKS));
     }
 }
