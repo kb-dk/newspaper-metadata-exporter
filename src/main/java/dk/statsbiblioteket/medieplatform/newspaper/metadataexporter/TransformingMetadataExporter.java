@@ -53,7 +53,7 @@ public class TransformingMetadataExporter extends MetadataExporter {
     public void handleNodeBegin(NodeBeginsParsingEvent event) {
         super.handleNodeBegin(event);
         String name = event.getName();
-        if (name != null && includedInExport(name) && name.endsWith(".jp2")) {
+        if (name != null && name.endsWith(".jp2") && includedInExport(name)) {
             Path presentationFile = Paths.get(presentationcopydir, name.replaceAll("\\.jp2$", "-presentation.jp2"));
             Path link = Paths.get(metadataexportdir, transformName(name));
             link.getParent().toFile().mkdirs();
