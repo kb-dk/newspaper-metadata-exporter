@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
+import static org.testng.AssertJUnit.assertEquals;
+
 public class MetadataExporterStandaloneIT {
     private final static String TEST_BATCH_ID = "400022028241";
     private File genericPropertyFile;
@@ -36,27 +38,27 @@ public class MetadataExporterStandaloneIT {
     }
 
     /**
-     * Test that a reasonable batch can be run against the flagger component without generating any
-     * errors or flags when the batch and configuration agree on the setup..
+     * Test the exporter on a small batch. Should have return value 0.
      * @throws Exception
      */
     @Test(groups = "testDataTest")
     public void testSmallBatch() throws Exception {
-        processBatch();
+        int result = processBatch();
+        assertEquals(0, result);
     }
 
     /**
-     * Test that a the default batch with a configuration inconsistent with the metadata in the batch. This should
-     * generate a lot of flags.
+     * Test the exporter on a bad batch. Should have return value 0.
      * @throws Exception
      */
     @Test(groups = "testDataTest")
     public void testBadBatch() throws Exception {
-        processBatch();
+        int result = processBatch();
+        assertEquals(0, result);
     }
 
-    private void processBatch()  throws Exception  {
-        MetadataExporterStandalone.doMain(
+    private int processBatch()  throws Exception  {
+        return MetadataExporterStandalone.doMain(
                 new String[]{"-c", "target/metadataexporter/it.properties", "-b", TEST_BATCH_ID, "-n", "1", "-p", "false"});
     }
 }

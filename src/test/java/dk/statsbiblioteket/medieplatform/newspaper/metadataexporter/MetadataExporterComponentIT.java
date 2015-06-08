@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.testng.AssertJUnit.assertTrue;
+
 public class MetadataExporterComponentIT {
     private final static String TEST_BATCH_ID = "400022028241";
     private File genericPropertyFile;
@@ -34,45 +36,45 @@ public class MetadataExporterComponentIT {
     }
 
     /**
-     * Test that a reasonable batch can be run against the flagger component without generating any
-     * errors or flags when the batch and configuration agree on the setup..
+     * Test the metadata exporter on a small batch. This should succeed.
      * @throws Exception
      */
     @Test(groups = "testDataTest")
     public void testSmallBatch() throws Exception {
-        processBatch("small-test-batch");
+        ResultCollector resultCollector = processBatch("small-test-batch");
+        assertTrue(resultCollector.isSuccess());
     }
 
     /**
-     * Test that a the default batch with a configuration inconsistent with the metadata in the batch. This should
-     * generate a lot of flags.
+     * Test the metadata exporter on a bad batch. This should succeed, since the exporter is very forgiving.
      * @throws Exception
      */
     @Test(groups = "testDataTest")
     public void testBadBatch() throws Exception {
-        processBatch("bad-bad-batch");
+        ResultCollector resultCollector = processBatch("bad-bad-batch");
+        assertTrue(resultCollector.isSuccess());
     }
 
     /**
-     * Test that a reasonable batch can be run against the flagger component without generating any
-     * errors or flags when the batch and configuration agree on the setup..
+     * Test the metadata exporter on a small batch while transforming. This should succeed.
      * @throws Exception
      */
     @Test(groups = "testDataTest")
     public void testSmallBatchTransforming() throws Exception {
         properties.setProperty("metadataexporter.transform", "true");
-        processBatch("small-test-batch");
+        ResultCollector resultCollector = processBatch("small-test-batch");
+        assertTrue(resultCollector.isSuccess());
     }
 
     /**
-     * Test that a the default batch with a configuration inconsistent with the metadata in the batch. This should
-     * generate a lot of flags.
+     * Test the metadata exporter on a bad batch while exporting. This should succeed, since the exporter is very forgiving.
      * @throws Exception
      */
     @Test(groups = "testDataTest")
     public void testBadBatchTransforming() throws Exception {
         properties.setProperty("metadataexporter.transform", "true");
-        processBatch("bad-bad-batch");
+        ResultCollector resultCollector = processBatch("bad-bad-batch");
+        assertTrue(resultCollector.isSuccess());
     }
 
     private void loadSpecificProperties(String path) throws Exception {
@@ -82,16 +84,18 @@ public class MetadataExporterComponentIT {
         properties.setProperty(MetadataExporter.METADATAEXPORTER_LOCATION_PROPERTY, "target/metadataexporter/Integration");
     }
 
-    private void processBatch(String batchFolder)  throws Exception  {
+    private ResultCollector processBatch(String batchFolder)  throws Exception  {
         TreeIterator iterator = getIterator(batchFolder);
         Batch batch = new Batch();
         batch.setBatchID(TEST_BATCH_ID);
         batch.setRoundTripNumber(1);
+        ResultCollector resultCollector = new ResultCollector(getClass().getSimpleName(), "1", 10);
         EventRunner runner = new EventRunner(iterator,
                 Arrays.asList(new TreeEventHandler[]{new MetadataExporter(properties)}),
-                new ResultCollector(getClass().getSimpleName(), "1", 10));
+                                             resultCollector);
 
         runner.run();
+        return resultCollector;
     }
 
     /**

@@ -3,11 +3,11 @@ Newspaper-metadata-exporter
 
 This module exports newspaper metadata from one tree to a new one.
 
-It will include MODS, MIX and FILM metadata files and OCR, but not actual files.
+It will include MODS, MIX and FILM metadata files and OCR, but not actual jp2-files. The output will mimic the metadata 
+exchange format we originally received the files in. 
 
-The output will mimic the metadata exchange format we originally received the files in. Optionally it will instead 
-transform and filter the directory layout to one directory to avoid film directories, and filter by a given date. The
-transforming exporter will also make symlinks to the presentation copies.
+Optionally it will instead transform and filter the directory layout to one directory to avoid film directories, 
+and filter by a given date. The transforming exporter will also make symlinks to the presentation copies.
 
 ## Installation
 

@@ -29,13 +29,13 @@ public class TransformingMetadataExporter extends MetadataExporter {
         if (cutoffDate == null) {
             return true;
         }
-        String date = getDate(name);
-        return (date != null && date.compareTo(cutoffDate) < 0) || date == null || date == "Film";
+        String date = getDateFolderName(name);
+        return (date != null && date.compareTo(cutoffDate) < 0) || date == null || date.equals("Film");
     }
 
     protected String transformName(String name) {
         String newspaperid = getNewspaperId(name);
-        String date = getDate(name);
+        String date = getDateFolderName(name);
         String edition = getEdition(name);
         String filename = getFileName(name);
         StringBuilder result = new StringBuilder(newspaperid);
@@ -75,7 +75,7 @@ public class TransformingMetadataExporter extends MetadataExporter {
         return name.substring(name.lastIndexOf("/") + 1);
     }
 
-    private String getDate(String name) {
+    private String getDateFolderName(String name) {
         if (name.contains("/WORKSHIFT-ISO-TARGET/")) {
             return null;
         } else if (name.contains("/UNMATCHED/")) {
