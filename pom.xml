@@ -9,14 +9,14 @@
   </parent>
 
   <artifactId>newspaper-metadata-exporter</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>1.0</version>
 
   <scm>
     <url>https://github.com/statsbiblioteket/newspaper-metadata-exporter</url>
     <connection>scm:git:https://github.com/statsbiblioteket/newspaper-metadata-exporter.git</connection>
     <developerConnection>scm:git:git@github.com:statsbiblioteket/newspaper-metadata-exporter.git
     </developerConnection>
-    <tag>HEAD</tag>
+    <tag>newspaper-metadata-exporter-1.0</tag>
   </scm>
 
   <build>
