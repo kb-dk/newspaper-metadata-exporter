@@ -32,7 +32,7 @@ public class MetadataExporterStandaloneIT {
         properties.setProperty(MetadataExporter.METADATAEXPORTER_LOCATION_PROPERTY,
                                "target/metadataexporter/Integration");
         properties.setProperty("metadataexporter.transform",
-                               "true");
+                               "false");
         new File("target/metadataexporter").mkdirs();
         properties.store(new FileOutputStream("target/metadataexporter/it.properties"), null);
     }
